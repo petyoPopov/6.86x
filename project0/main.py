@@ -7,8 +7,11 @@ def randomization(n):
     Returns:
       A - a randomly-generated nx1 Numpy array.
     """
-    #Your code here
-    raise NotImplementedError
+    A=np.random.random([n,1])
+    try:
+        return A
+    except:
+        raise NotImplementedError
 
 def operations(h, w):
     """
@@ -23,9 +26,14 @@ def operations(h, w):
       B - a randomly-generated h x w Numpy array.
       s - the sum of A and B.
     """
-    #Your code here
-    raise NotImplementedError
-
+    A=np.random.random([h,w])
+    B=np.random.random([h,w])
+    s=np.add(A,B)
+    
+    try:
+        return A,B,s
+    except:
+        raise NotImplementedError
 
 def norm(A, B):
     """
@@ -38,8 +46,12 @@ def norm(A, B):
     Returns:
       s - the L2 norm of A+B.
     """
-    #Your code here
-    raise NotImplementedError
+    s=np.add(A,B)
+    s= np.linalg.norm(s)
+    try:
+        return s
+    except:
+        raise NotImplementedError
 
 
 def neural_network(inputs, weights):
@@ -53,5 +65,11 @@ def neural_network(inputs, weights):
      Returns (in this order):
        out - a 1 x 1 NumPy array, representing the output of the neural network
     """
-    #Your code here
-    raise NotImplementedError
+    out=np.sum(inputs*weights)
+    out=np.tanh(out)
+    out=out*np.ones((1,1))
+    out=np.array(out)
+    try:
+        return out
+    except:
+        raise NotImplementedError
