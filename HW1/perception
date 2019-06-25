@@ -1,0 +1,39 @@
+def f(max_loop=1000):
+    #x[x1,x2,y]
+    x=[[-4,2,1],[-2,1,1],[-1,-1,-1],[2,2,-1],[1,-2,-1]]
+    yy=[1,1,-1,-1,-1]
+    
+    loop = 0
+    
+    t0=0
+    t1=0
+    t2=0
+    
+    while loop <= max_loop :
+        index=0
+        for i in x:
+            y=i[2]
+            if y*(t1*i[0]+t2*i[1]+t0) <= 0:
+                #print(y[index]*(t1*i[0]+t2*i[1]+t0))
+                t1 = t1+y*i[0]
+                t2 = t2+y*i[1]
+                t0 = t0+y
+                
+            else:
+                #print(y[index]*(t1*i[0]+t2*i[1]+t0))
+                continue
+            
+            index=index+1
+        loop = loop+1
+    
+    t = [[t1,t2],t0]
+    
+    index=0
+    for i in x:
+        print(index+1)
+        print(yy[index]*(t1*i[0]+t2*i[1]+t0))
+        index+=1
+    
+    return print(t)
+
+f() 
