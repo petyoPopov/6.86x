@@ -1,4 +1,5 @@
-# 6.86x
-edx.org class offered by MIT in Machine Learning with Python-From Linear Models to Deep Learning 
+# Machine Learning with Python
+Code from my class in Machine Learning with Python offered by MIT
+It included theoretical content and practical coding task covering the ground from Linear Models to Deep Learning 
 
-In this repo is going to be used to store code developd for the class for both HW and Projects.
+This repo is going to be used to store code developed for the class for both Homework and Projects.
