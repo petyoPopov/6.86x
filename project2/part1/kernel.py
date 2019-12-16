@@ -19,8 +19,16 @@ def polynomial_kernel(X, Y, c, p):
         Returns:
             kernel_matrix - (n, m) Numpy array containing the kernel matrix
     """
-    # YOUR CODE HERE
-    raise NotImplementedError
+    n = np.shape(X)[0]
+    m = np.shape(Y)[0]
+    
+    #kernel_matrix = np.zeros(n,m)
+    kernel_matrix = np.power( ((X @ np.transpose(Y)) + c) , p)
+    
+    try:
+        return kernel_matrix
+    except:
+        raise NotImplementedError
 
 
 
@@ -38,5 +46,22 @@ def rbf_kernel(X, Y, gamma):
         Returns:
             kernel_matrix - (n, m) Numpy array containing the kernel matrix
     """
-    # YOUR CODE HERE
-    raise NotImplementedError
+    def single_rbf_kernel(x , y , gamma):
+        """
+        takes one row x, one row of y and computes the kernel
+        """
+        norm_value = np.power(np.linalg.norm(x-y) , 2)
+        return np.exp(-norm_value * (1 * np.power(gamma , 1)))
+    
+    n = np.shape(X)[0]
+    m = np.shape(Y)[0]
+    kernel_matrix = np.zeros([n,m])
+    
+    for i in range(n):
+        for j in range(m):
+            kernel_matrix[i][j] = single_rbf_kernel(X[i,:] , Y[j,:] , gamma)
+    
+    try:
+        return kernel_matrix
+    except:
+        raise NotImplementedError
