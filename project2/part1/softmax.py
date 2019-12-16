@@ -31,8 +31,27 @@ def compute_probabilities(X, theta, temp_parameter):
     Returns:
         H - (k, n) NumPy array, where each entry H[j][i] is the probability that X[i] is labeled as j
     """
-    #YOUR CODE HERE
-    raise NotImplementedError
+    term_1 = (theta @ np.transpose(X)) / temp_parameter
+    #print("term_1\n",term_1)
+    c = np.max(term_1 , 0)
+    #print("c: \n", c)
+    term_1 = np.exp(term_1 - c)
+    scale_coef = np.sum(term_1,0)
+    scale_coef = 1 / scale_coef
+    #scale_coef = scale_coef[:, np.newaxis]
+    n = np.shape(scale_coef)[0]
+    scale_coef = scale_coef.reshape((n))
+    
+    H = scale_coef * term_1
+    #print("scale", scale_coef)
+    #print("scale shape", np.shape(scale_coef))
+    #print("term_1", term_1)
+    
+    
+    try:
+        return H
+    except:
+        raise NotImplementedError
 
 def compute_cost_function(X, Y, theta, lambda_factor, temp_parameter):
     """
@@ -50,8 +69,43 @@ def compute_cost_function(X, Y, theta, lambda_factor, temp_parameter):
     Returns
         c - the cost value (scalar)
     """
-    #YOUR CODE HERE
-    raise NotImplementedError
+    '''
+    term_1 = (theta @ np.transpose(X)) / temp_parameter  #(k,n)
+    term_1 = np.exp(term_1)
+    scale_coef = np.sum(term_1,0)                        #sums all entries in a column (all k-s per n)
+    scale_coef = 1 / scale_coef                          #finds reciprotial of every entry
+    n = np.shape(scale_coef)[0]                          # number of data points
+    k = np.shape(theta)[0]
+    scale_coef = scale_coef.reshape((n))                 #makes the coef into an array (1,n)
+    term_1 = scale_coef * term_1                              #multiplies entry by entry for every row
+    '''
+    term_1 = np.clip(compute_probabilities(X, theta, temp_parameter), 1e-15, 1-1e-15)
+    term_1 = np.log(term_1)
+    n = np.shape(X)[0]                          # number of data points
+    k = np.shape(theta)[0]
+    '''
+    pick_matrix = np.zeros([n,k])
+    for i in range(n):
+       pick_matrix[i,Y[i]]=1
+    
+    term_1 = -np.sum(np.trace(pick_matrix @ term_1))/n    #pick_matrix choses elements. then with trace we sum diagonals
+    '''
+    
+    #'''
+    sum_t = 0
+    for i in range(n):
+       sum_t += term_1[Y[i],i]
+    
+    term_1 = -sum_t / n
+    #'''
+    term_2 = np.sum(np.power(theta , 2)) * lambda_factor / 2
+    
+    loss = term_1 + term_2
+    
+    try:
+        return loss
+    except:    
+        raise NotImplementedError
 
 def run_gradient_descent_iteration(X, Y, theta, alpha, lambda_factor, temp_parameter):
     """
@@ -70,8 +124,32 @@ def run_gradient_descent_iteration(X, Y, theta, alpha, lambda_factor, temp_param
     Returns:
         theta - (k, d) NumPy array that is the final value of parameters theta
     """
-    #YOUR CODE HERE
-    raise NotImplementedError
+    n = np.shape(X)[0]
+    d = np.shape(X)[1]
+    k = np.shape(theta)[0]
+    
+    prob_f = compute_probabilities(X, theta, temp_parameter)
+    
+    #convert all to coo_matrix for more efficient operation
+    #X = sparse.coo_matrix(X)
+    #Y = sparse.coo_matrix(Y)
+    #theta = sparse.coo_matrix(theta)
+    #prob_f = sparse.coo_matrix(prob_f)
+    
+    data_ones = np.ones(n)
+    logic_i = sparse.coo_matrix((data_ones, (Y , range(n) )), shape=(k, n)).toarray()
+    #M = sparse.coo_matrix(([1]*n, (Y, range(n))), shape=(k,n)).toarray()
+    term_1 = -((logic_i - prob_f) @ X / (temp_parameter * n))
+    
+    term_2 = lambda_factor * theta
+    
+    gradient = term_1 + term_2
+    theta = theta - alpha * gradient
+    
+    try:
+        return theta
+    except:
+        raise NotImplementedError
 
 def update_y(train_y, test_y):
     """
